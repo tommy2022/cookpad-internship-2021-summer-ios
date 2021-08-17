@@ -8,49 +8,45 @@
 import SwiftUI
 
 struct ProductDetailPageView: View {
+    @EnvironmentObject var cartState: CartState
     var product: FetchProductsQuery.Data.Product
     var body: some View {
-        NavigationLink(destination: ProductDetailPageView(product: product)) {
-            HStack(alignment: .top) {
-              RemoteImage(urlString: product.imageUrl)
-                .frame(width: 100, height: 100)
-                VStack(alignment: .leading) {
-                   Text(product.name)
-                    Spacer()
-                        .frame(height: 8)
-                   Text(product.summary)
-                    Spacer()
-                   Text("\(product.price)円")
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-                .padding(.vertical, 8)
+          RemoteImage(urlString: product.imageUrl)
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: .infinity)
+            VStack(alignment: .leading) {
+                Text(product.name)
+                Spacer()
+                    .frame(height: 8)
+                Text("\(product.price)円")
+                Spacer()
+                Text(product.summary)
+                Spacer()
+                Button("カートに追加", action: {
+                    cartState.addProduct(newProduct: product)
+                })
+                .frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
+                    .background(Color.orange)
+                    .foregroundColor(Color.white)
+                    .cornerRadius(10)
+                .padding()
             }
-        }
-        .onAppear {
-            Network.shared.apollo.fetch(query: FetchProductsQuery()) { result in
-               switch result {
-               case let .success(graphqlResult):
-                   self.products = graphqlResult.data?.products ?? []
-               case .failure:
-                   break
+            .listStyle(PlainListStyle())
+            .toolbar {
+               ToolbarItemGroup(placement: .navigationBarTrailing) {
+                VStack{
+                    Button(action: {
+                        cartState.isCartViewPresented = true
+                    }) {
+                            Image(systemName: "folder")
+                    }
+                    Text("\(cartState.totalProduct)")
+                }
                }
             }
-        }
-    }
-}
-
-struct ProductDetailPageView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ProductDetailPageView(
-                product: FetchProductsQuery.Data.Product(
-                    id: UUID().uuidString,
-                    name: "商品 \(1)",
-                    price: 100,
-                    summary: "おいしい食材 \(1)",
-                    imageUrl: "https://image.mini-mart.com/dummy/1"
-                )
-            )
-        }
+            .sheet(isPresented: $cartState.isCartViewPresented) {
+                CartPageView()
+                    .environmentObject(self.cartState)
+           }
     }
 }

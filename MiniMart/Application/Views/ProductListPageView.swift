@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ProductListPageView: View {
+    @EnvironmentObject var cartState: CartState
     @State var products: [FetchProductsQuery.Data.Product] = []
-    @State var isCartViewPresented: Bool = false
     var body: some View {
         List(products, id: \.id) {product in
-            NavigationLink(destination: ProductDetailPageView(product: product)) {
+            NavigationLink(
+                destination: ProductDetailPageView(product: product)
+            ) {
                 HStack(alignment: .top) {
                   RemoteImage(urlString: product.imageUrl)
                     .frame(width: 100, height: 100)
@@ -43,17 +45,21 @@ struct ProductListPageView: View {
         .navigationTitle("MiniMart")
         .toolbar {
            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            VStack {
                 Button(action: {
-                    self.isCartViewPresented = true
+                    cartState.isCartViewPresented = true
                 }) {
                     Image(systemName: "folder")
                 }
+                Text("\(cartState.totalProduct)")
+            }
            }
-       }
-        .sheet(isPresented: $isCartViewPresented) {
+        }
+        .sheet(isPresented: $cartState.isCartViewPresented) {
            NavigationView {
-               CartPageView()
+            CartPageView()
            }
+           .environmentObject(self.cartState)
        }
     }
 }

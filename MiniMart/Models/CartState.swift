@@ -3,8 +3,10 @@ import Combine
 
 final class CartState: ObservableObject {
     var totalProduct: Int = 0
+    var totalPrice: Int = 0
     @Published var products: [FetchProductsQuery.Data.Product] = []
     @Published var numProduct: [String:Int] = [:]
+    @Published var isCartViewPresented: Bool = false
     
     func addProduct(newProduct: FetchProductsQuery.Data.Product) {
         let id: String = newProduct.id as String
@@ -15,6 +17,7 @@ final class CartState: ObservableObject {
         let numItem = keyExists ? numProduct[id]! : 0
         numProduct[id] = numItem + 1
         totalProduct += 1
+        totalPrice += newProduct.price
     }
     
     func removeProduct(id: String) {
@@ -24,5 +27,10 @@ final class CartState: ObservableObject {
         }
     }
     
-    func getNumProducts() -> Int {totalProduct}
+    func clear() {
+        products = []
+        numProduct = [:]
+        totalProduct = 0
+        totalPrice = 0
+    }
 }
