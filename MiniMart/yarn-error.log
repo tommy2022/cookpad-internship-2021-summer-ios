@@ -1,0 +1,40 @@
+Arguments: 
+  /opt/homebrew/Cellar/node/16.3.0/bin/node /opt/homebrew/bin/yarn download-schema
+
+PATH: 
+  /opt/homebrew/opt/openssl@1.1/bin:/opt/homebrew/opt/rbenv/shims:/opt/homebrew/opt/rbenv/bin:/opt/homebrew/Caskroom/miniforge/base/condabin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/opt/python@3.9/libexec/bin:/opt/homebrew/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/qinx/.rvm/bin
+
+Yarn version: 
+  1.22.11
+
+Node version: 
+  16.3.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  SyntaxError: /Users/qinx/Documents/cookpad/cookpad-internship-2021-summer-ios/package.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "private": true,
+    "devDependencies": {
+      "apollo": "^2.33.4"
+    },
+    "scripts": {
+      "download-schema": "apollo schema:download --header=\"X-Api-Key: j!gi@2idct*N\" --endpoint=https://minimart-api.cookpadapp.com/graphql schema.json",
+      "codegen": "apollo codegen:generate --target=swift --includes=./**/*.graphql --localSchemaFile=schema.json MiniMart/DataSources/API.swift"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
